@@ -219,62 +219,12 @@ async function copyToClipboard() {
     } catch (error) {
         showToast(t('toastCopyFailed'), 'error');
     }
-}
+    function showToast(message, type = 'info') {
+        toast.textContent = message;
+        toast.className = `toast ${type}`;
+        toast.classList.add('show');
 
-function downloadPDF() {
-    try {
-        const text = tailoredOutput.textContent;
-
-        // Check if text contains Arabic characters
-        const hasArabic = /[\u0600-\u06FF]/.test(text);
-
-        if (hasArabic) {
-            showToast('PDF export doesn\'t support Arabic text. Please copy the CV and paste it into Word/Google Docs, then export as PDF.', 'error');
-            return;
-        }
-
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-
-        // Title
-        doc.setFontSize(16);
-        doc.setTextColor(99, 102, 241);
-        doc.text('Tailored CV', 20, 20);
-
-        // Content
-        doc.setFontSize(11);
-        doc.setTextColor(0, 0, 0);
-
-        const lines = doc.splitTextToSize(text, 170);
-
-        let y = 35;
-        const pageHeight = doc.internal.pageSize.height;
-        const lineHeight = 7;
-
-        lines.forEach(line => {
-            if (y + lineHeight > pageHeight - 20) {
-                doc.addPage();
-                y = 20;
-            }
-            doc.text(line, 20, y);
-            y += lineHeight;
-        });
-
-        // Save
-        doc.save(`tailored_cv_${Date.now()}.pdf`);
-        showToast(t('toastPDFSuccess'), 'success');
-    } catch (error) {
-        console.error('PDF Error:', error);
-        showToast(t('toastPDFFailed'), 'error');
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3000);
     }
-}
-
-function showToast(message, type = 'info') {
-    toast.textContent = message;
-    toast.className = `toast ${type}`;
-    toast.classList.add('show');
-
-    setTimeout(() => {
-        toast.classList.remove('show');
-    }, 3000);
-}
