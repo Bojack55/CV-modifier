@@ -223,6 +223,16 @@ async function copyToClipboard() {
 
 function downloadPDF() {
     try {
+        const text = tailoredOutput.textContent;
+
+        // Check if text contains Arabic characters
+        const hasArabic = /[\u0600-\u06FF]/.test(text);
+
+        if (hasArabic) {
+            showToast('PDF export doesn\'t support Arabic text. Please copy the CV and paste it into Word/Google Docs, then export as PDF.', 'error');
+            return;
+        }
+
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
 
@@ -235,7 +245,6 @@ function downloadPDF() {
         doc.setFontSize(11);
         doc.setTextColor(0, 0, 0);
 
-        const text = tailoredOutput.textContent;
         const lines = doc.splitTextToSize(text, 170);
 
         let y = 35;
