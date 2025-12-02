@@ -15,7 +15,7 @@ const keywordsList = document.getElementById('keywordsList');
 const toast = document.getElementById('toast');
 
 // API Configuration
-const API_BASE_URL = '';  // Empty means same domain (works for Vercel, local, etc.)
+const API_BASE_URL = '/.netlify/functions';  // Point to Netlify functions
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
@@ -77,7 +77,7 @@ function setupLanguageSelector() {
 
 async function checkServerHealth() {
     try {
-        const response = await fetch(`${API_BASE_URL}/api/health`);
+        const response = await fetch(`${API_BASE_URL}/tailor-cv`, { method: 'OPTIONS' }); // Simple health check
         const data = await response.json();
         console.log('✅ Server healthy:', data);
     } catch (error) {
@@ -106,7 +106,7 @@ async function tailorCV() {
         const provider = apiProvider.value;
 
         // Call backend API
-        const response = await fetch(`${API_BASE_URL}/api/tailor-cv`, {
+        const response = await fetch(`${API_BASE_URL}/tailor-cv`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -119,8 +119,16 @@ async function tailorCV() {
         });
 
         if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.error || 'Failed to generate tailored CV');
+            const errorText = await response.text();
+            console.error('API Error Response:', errorText);
+            let errorMessage = 'Failed to generate tailored CV';
+            try {
+                const errorJson = JSON.parse(errorText);
+                errorMessage = errorJson.error || errorMessage;
+            } catch (e) {
+                errorMessage += `: ${response.status} ${response.statusText}`;
+            }
+            throw new Error(errorMessage);
         }
 
         const data = await response.json();
