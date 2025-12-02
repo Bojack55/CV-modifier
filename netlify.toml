@@ -4,8 +4,8 @@
   publish = "."
 
 [[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/api"
+  from = "/api/tailor-cv"
+  to = "/.netlify/functions/tailor-cv"
   status = 200
   force = true
 
