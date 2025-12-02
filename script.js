@@ -231,12 +231,38 @@ async function copyToClipboard() {
     } catch (error) {
         showToast(t('toastCopyFailed'), 'error');
     }
-    function showToast(message, type = 'info') {
-        toast.textContent = message;
-        toast.className = `toast ${type}`;
-        toast.classList.add('show');
+}
 
-        setTimeout(() => {
-            toast.classList.remove('show');
-        }, 3000);
+function downloadPDF() {
+    const element = document.getElementById('tailoredOutput');
+    const opt = {
+        margin: 1,
+        filename: 'tailored-cv.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+
+    // Use html2pdf to handle Arabic/RTL correctly
+    if (typeof html2pdf !== 'undefined') {
+        html2pdf().set(opt).from(element).save().then(() => {
+            showToast(t('toastPDFSuccess'), 'success');
+        }).catch(err => {
+            console.error(err);
+            showToast(t('toastPDFFailed'), 'error');
+        });
+    } else {
+        console.error('html2pdf library not loaded');
+        showToast(t('toastPDFFailed'), 'error');
     }
+}
+
+function showToast(message, type = 'info') {
+    toast.textContent = message;
+    toast.className = `toast ${type}`;
+    toast.classList.add('show');
+
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 3000);
+}
