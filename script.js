@@ -148,6 +148,10 @@ function displayResults(tailoredCV) {
     // Show output section
     outputSection.style.display = 'block';
     outputSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+    // Show support section
+    const supportSection = document.getElementById('supportSection');
+    if (supportSection) supportSection.style.display = 'block';
 }
 
 function calculateKeywordMatch(cv, jobDesc) {
