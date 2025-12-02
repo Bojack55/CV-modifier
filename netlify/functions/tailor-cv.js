@@ -99,22 +99,41 @@ OUTPUT FORMAT: Pure CV text only, ready to use.`;
 
         const data = await response.json();
 
-        // Extract text from response
+        // Log for debugging
+        console.log('=== GEMINI RESPONSE ===');
+        console.log(JSON.stringify(data, null, 2));
+        console.log('=======================');
+
+        // Extract text - try multiple methods
         let tailoredCV = null;
 
+        // Method 1: Standard structure
         if (data.candidates && data.candidates[0]) {
             const candidate = data.candidates[0];
             if (candidate.content && candidate.content.parts && candidate.content.parts[0]) {
                 tailoredCV = candidate.content.parts[0].text;
+            } else if (candidate.text) {
+                tailoredCV = candidate.text;
             }
         }
 
+        // Method 2: Direct text field
+        if (!tailoredCV && data.text) {
+            tailoredCV = data.text;
+        }
+
         if (!tailoredCV) {
-            console.error('Unexpected response:', JSON.stringify(data));
+            console.error('Could not extract text. Response keys:', Object.keys(data));
+            if (data.candidates && data.candidates[0]) {
+                console.error('First candidate keys:', Object.keys(data.candidates[0]));
+            }
             return {
                 statusCode: 500,
                 headers,
-                body: JSON.stringify({ error: 'Could not extract CV from API response' })
+                body: JSON.stringify({
+                    error: 'Could not extract CV from API response',
+                    debug: 'Check Netlify function logs for details'
+                })
             };
         }
 
