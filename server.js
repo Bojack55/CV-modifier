@@ -111,7 +111,7 @@ async function callGemini(cvText, jobDescription, apiKey) {
     // Using gemini-2.5-flash (confirmed available in user's Google AI Studio)
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
-    const prompt = `You are an expert CV/Resume writer and career coach. I need you to tailor my CV to match a specific job description.
+    const prompt = `You are an expert CV/Resume writer. Tailor the CV below to match the job description.
 
 MY CV:
 ${cvText}
@@ -119,14 +119,17 @@ ${cvText}
 JOB DESCRIPTION:
 ${jobDescription}
 
-Please provide:
-1. A tailored version of my CV that highlights relevant experience and skills matching the job description
-2. Rewrite bullet points to emphasize achievements that align with the job requirements
-3. Use keywords from the job description naturally throughout the CV
-4. Maintain the original structure and truthfulness of my experience
-5. Make it ATS-friendly
+CRITICAL INSTRUCTIONS:
+1. Output ONLY the tailored CV content - NO introductions, NO explanations, NO commentary
+2. Start directly with the candidate's name/header
+3. Keep it to ONE PAGE maximum - be concise
+4. Use keywords from the job description naturally
+5. Highlight relevant experience and skills matching the job
+6. Make it ATS-friendly
+7. Maintain truthfulness - don't add fake experience
+8. Format should be ready for immediate copy-paste or download
 
-Format the output as a complete, professional CV ready to use.`;
+OUTPUT FORMAT: Pure CV text only, ready to use.`;
 
     const response = await fetch(url, {
         method: 'POST',
