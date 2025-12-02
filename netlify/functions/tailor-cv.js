@@ -82,7 +82,7 @@ OUTPUT FORMAT: Pure CV text only, ready to use.`;
                 }],
                 generationConfig: {
                     temperature: 0.7,
-                    maxOutputTokens: 2048,
+                    maxOutputTokens: 4096,  // Increased from 2048 to prevent truncation
                 }
             })
         });
