@@ -702,4 +702,48 @@ body {
         padding: 1rem 2rem;
         font-size: 1rem;
     }
+} 
+ 
+/* Buy Me a Coffee Button Styles */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.bmc-btn-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 221, 0, 0.1);
+    border: 1px solid #FFDD00;
+    border-radius: 25px;
+    color: #FFDD00;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: var(--transition);
+    white-space: nowrap;
+}
+
+.bmc-btn-header:hover {
+    background: #FFDD00;
+    color: #000000;
+    box-shadow: 0 0 15px rgba(255, 221, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+.bmc-icon {
+    font-size: 1.1rem;
+}
+
+.bmc-text {
+    font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+    .bmc-text {
+        display: none;
+    }
 }
