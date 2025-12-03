@@ -235,20 +235,39 @@ async function copyToClipboard() {
 
 function downloadPDF() {
     const element = document.getElementById('tailoredOutput');
+
+    // Create a temporary wrapper with better styling for PDF
+    const wrapper = document.createElement('div');
+    wrapper.style.cssText = `
+        padding: 40px;
+        background: white;
+        color: black;
+        font-family: Arial, sans-serif;
+        font-size: 12pt;
+        line-height: 1.6;
+        white-space: pre-wrap;
+        max-width: 8.5in;
+    `;
+    wrapper.textContent = element.textContent;
+
     const opt = {
-        margin: 1,
+        margin: 0.5,
         filename: 'tailored-cv.pdf',
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
+        html2canvas: {
+            scale: 2,
+            backgroundColor: '#ffffff',
+            logging: false
+        },
         jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
     };
 
     // Use html2pdf to handle Arabic/RTL correctly
     if (typeof html2pdf !== 'undefined') {
-        html2pdf().set(opt).from(element).save().then(() => {
+        html2pdf().set(opt).from(wrapper).save().then(() => {
             showToast(t('toastPDFSuccess'), 'success');
         }).catch(err => {
-            console.error(err);
+            console.error('PDF Error:', err);
             showToast(t('toastPDFFailed'), 'error');
         });
     } else {
