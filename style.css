@@ -732,10 +732,10 @@ body {
 }
 
 .bmc-btn-header {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    padding: 0.5rem 0.9rem;
+    padding: 0.4rem 0.7rem;
     background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 152, 0, 0.1) 100%);
     border: 1px solid rgba(255, 193, 7, 0.3);
     border-radius: 50px;
@@ -747,6 +747,7 @@ body {
     white-space: nowrap;
     position: relative;
     overflow: hidden;
+    width: fit-content;
 }
 
 .bmc-btn-header::before {
