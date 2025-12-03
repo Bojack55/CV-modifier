@@ -235,34 +235,56 @@ async function copyToClipboard() {
 
 function downloadPDF() {
     const element = document.getElementById('tailoredOutput');
+    const cvText = element.textContent.trim();
 
-    // Create a temporary wrapper with better styling for PDF
+    if (!cvText) {
+        showToast('No CV content to download', 'error');
+        return;
+    }
+
+    // Create a clean wrapper for PDF with proper structure
     const wrapper = document.createElement('div');
     wrapper.style.cssText = `
-        padding: 40px;
+        width: 7.5in;
+        padding: 0.5in;
         background: white;
-        color: black;
-        font-family: Arial, sans-serif;
-        font-size: 12pt;
-        line-height: 1.6;
-        white-space: pre-wrap;
-        max-width: 8.5in;
+        color: #000000;
+        font-family: 'Calibri', 'Arial', sans-serif;
+        font-size: 11pt;
+        line-height: 1.4;
     `;
-    wrapper.textContent = element.textContent;
+
+    // Convert text to properly formatted HTML
+    const paragraphs = cvText.split('\n').filter(line => line.trim());
+    wrapper.innerHTML = paragraphs.map(line => {
+        const trimmed = line.trim();
+        // Check if it's a header (all caps or starts with specific patterns)
+        if (trimmed.match(/^[A-Z\s]{5,}$/) || trimmed.match(/^(SUMMARY|EXPERIENCE|EDUCATION|SKILLS|PROJECTS|CERTIFICATIONS)/i)) {
+            return `<h3 style="margin: 12pt 0 6pt 0; font-size: 12pt; font-weight: bold; text-transform: uppercase;">${trimmed}</h3>`;
+        }
+        return `<p style="margin: 0 0 6pt 0;">${trimmed}</p>`;
+    }).join('');
 
     const opt = {
-        margin: 0.5,
+        margin: [0.5, 0.5, 0.5, 0.5],
         filename: 'tailored-cv.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
+        image: { type: 'jpeg', quality: 0.95 },
         html2canvas: {
             scale: 2,
             backgroundColor: '#ffffff',
-            logging: false
+            logging: false,
+            windowWidth: 816, // 8.5in at 96dpi
+            width: 816,
+            height: 1056 // 11in at 96dpi
         },
-        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+        jsPDF: {
+            unit: 'in',
+            format: 'letter',
+            orientation: 'portrait'
+        },
+        pagebreak: { mode: 'avoid-all' }
     };
 
-    // Use html2pdf to handle Arabic/RTL correctly
     if (typeof html2pdf !== 'undefined') {
         html2pdf().set(opt).from(wrapper).save().then(() => {
             showToast(t('toastPDFSuccess'), 'success');
