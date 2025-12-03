@@ -242,58 +242,64 @@ function downloadPDF() {
         return;
     }
 
-    // Create a clean wrapper for PDF with proper structure
-    const wrapper = document.createElement('div');
-    wrapper.style.cssText = `
-        width: 7.5in;
-        padding: 0.5in;
-        background: white;
-        color: #000000;
-        font-family: 'Calibri', 'Arial', sans-serif;
-        font-size: 11pt;
-        line-height: 1.4;
-    `;
-
-    // Convert text to properly formatted HTML
-    const paragraphs = cvText.split('\n').filter(line => line.trim());
-    wrapper.innerHTML = paragraphs.map(line => {
-        const trimmed = line.trim();
-        // Check if it's a header (all caps or starts with specific patterns)
-        if (trimmed.match(/^[A-Z\s]{5,}$/) || trimmed.match(/^(SUMMARY|EXPERIENCE|EDUCATION|SKILLS|PROJECTS|CERTIFICATIONS)/i)) {
-            return `<h3 style="margin: 12pt 0 6pt 0; font-size: 12pt; font-weight: bold; text-transform: uppercase;">${trimmed}</h3>`;
-        }
-        return `<p style="margin: 0 0 6pt 0;">${trimmed}</p>`;
-    }).join('');
-
-    const opt = {
-        margin: [0.5, 0.5, 0.5, 0.5],
-        filename: 'tailored-cv.pdf',
-        image: { type: 'jpeg', quality: 0.95 },
-        html2canvas: {
-            scale: 2,
-            backgroundColor: '#ffffff',
-            logging: false,
-            windowWidth: 816, // 8.5in at 96dpi
-            width: 816,
-            height: 1056 // 11in at 96dpi
-        },
-        jsPDF: {
-            unit: 'in',
-            format: 'letter',
-            orientation: 'portrait'
-        },
-        pagebreak: { mode: 'avoid-all' }
-    };
-
-    if (typeof html2pdf !== 'undefined') {
-        html2pdf().set(opt).from(wrapper).save().then(() => {
-            showToast(t('toastPDFSuccess'), 'success');
-        }).catch(err => {
-            console.error('PDF Error:', err);
-            showToast(t('toastPDFFailed'), 'error');
+    try {
+        // Use jsPDF directly
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: 'a4'
         });
-    } else {
-        console.error('html2pdf library not loaded');
+
+        doc.setFont('helvetica');
+        doc.setFontSize(11);
+
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+        const margin = 20;
+        const maxWidth = pageWidth - (margin * 2);
+        const lineHeight = 7;
+        let yPosition = margin;
+
+        const lines = cvText.split('\n');
+
+        lines.forEach((line, index) => {
+            const trimmed = line.trim();
+            if (!trimmed) {
+                yPosition += lineHeight / 2;
+                return;
+            }
+
+            const isHeader = trimmed.match(/^[A-Z\s]{5,}$/) ||
+                trimmed.match(/^(SUMMARY|EXPERIENCE|EDUCATION|SKILLS|PROJECTS|CERTIFICATIONS|CONTACT)/i);
+
+            if (isHeader) {
+                if (index > 0) yPosition += lineHeight;
+                doc.setFontSize(12);
+                doc.setFont('helvetica', 'bold');
+            } else {
+                doc.setFontSize(11);
+                doc.setFont('helvetica', 'normal');
+            }
+
+            const splitLines = doc.splitTextToSize(trimmed, maxWidth);
+
+            splitLines.forEach(splitLine => {
+                if (yPosition + lineHeight > pageHeight - margin) {
+                    doc.addPage();
+                    yPosition = margin;
+                }
+
+                doc.text(splitLine, margin, yPosition);
+                yPosition += lineHeight;
+            });
+        });
+
+        doc.save('tailored-cv.pdf');
+        showToast(t('toastPDFSuccess'), 'success');
+
+    } catch (err) {
+        console.error('PDF Error:', err);
         showToast(t('toastPDFFailed'), 'error');
     }
 }
