@@ -130,7 +130,7 @@ body {
 .language-btn {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.4rem;
     padding: 0.5rem 1rem;
     background: var(--bg-card);
     border: 1px solid var(--border-color);
@@ -272,7 +272,7 @@ body {
 
 .char-count {
     text-align: right;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: var(--text-muted);
     margin-top: 0.5rem;
 }
@@ -290,7 +290,7 @@ body {
 .input-group {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.4rem;
 }
 
 .input-group label {
@@ -415,7 +415,7 @@ body {
 
 .output-actions {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.4rem;
 }
 
 .icon-button {
@@ -517,7 +517,7 @@ body {
 .keywords-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 0.4rem;
 }
 
 .keyword-tag {
@@ -525,7 +525,7 @@ body {
     background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(236, 72, 153, 0.2) 100%);
     border: 1px solid rgba(99, 102, 241, 0.3);
     border-radius: 20px;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 500;
     color: var(--text-primary);
     animation: fadeInScale 0.3s ease-out;
@@ -734,7 +734,7 @@ body {
 .bmc-btn-header {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.4rem;
     padding: 0.5rem 0.9rem;
     background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 152, 0, 0.1) 100%);
     border: 1px solid rgba(255, 193, 7, 0.3);
@@ -742,7 +742,7 @@ body {
     color: #FFC107;
     text-decoration: none;
     font-weight: 600;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     transition: var(--transition);
     white-space: nowrap;
     position: relative;
@@ -777,7 +777,7 @@ body {
 }
 
 .bmc-text {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     letter-spacing: 0.3px;
 }
 
