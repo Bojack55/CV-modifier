@@ -702,8 +702,10 @@ body {
         padding: 1rem 2rem;
         font-size: 1rem;
     }
-} 
- 
+}
+
+   
+
 /* Buy Me a Coffee Button Styles */
 .header-actions {
     display: flex;
@@ -715,35 +717,58 @@ body {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    background: rgba(255, 221, 0, 0.1);
-    border: 1px solid #FFDD00;
-    border-radius: 25px;
-    color: #FFDD00;
+    padding: 0.6rem 1.2rem;
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 152, 0, 0.1) 100%);
+    border: 1px solid rgba(255, 193, 7, 0.3);
+    border-radius: 50px;
+    color: #FFC107;
     text-decoration: none;
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     transition: var(--transition);
     white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+}
+
+.bmc-btn-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.bmc-btn-header:hover::before {
+    left: 100%;
 }
 
 .bmc-btn-header:hover {
-    background: #FFDD00;
-    color: #000000;
-    box-shadow: 0 0 15px rgba(255, 221, 0, 0.3);
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.2) 0%, rgba(255, 152, 0, 0.2) 100%);
+    border-color: #FFC107;
+    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
     transform: translateY(-2px);
 }
 
 .bmc-icon {
     font-size: 1.1rem;
+    filter: drop-shadow(0 0 8px rgba(255, 193, 7, 0.5));
 }
 
 .bmc-text {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
+    letter-spacing: 0.3px;
 }
 
 @media (max-width: 768px) {
     .bmc-text {
         display: none;
+    }
+
+    .bmc-btn-header {
+        padding: 0.5rem 0.8rem;
     }
 }
