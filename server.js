@@ -108,7 +108,7 @@ app.post('/api/tailor-cv', async (req, res) => {
 
 // Gemini API call
 async function callGemini(cvText, jobDescription, apiKey) {
-    // Using gemini-2.5-flash (confirmed available in user's Google AI Studio)
+    // Using gemini-2.5-flash
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
     const prompt = `You are an expert CV/Resume writer. Tailor the CV below to match the job description.
@@ -128,6 +128,7 @@ CRITICAL INSTRUCTIONS:
 6. Make it ATS-friendly
 7. Maintain truthfulness - don't add fake experience
 8. Format should be ready for immediate copy-paste or download
+9. The CV should be 1 page long and maintaining a proper flow and structure.
 
 OUTPUT FORMAT: Pure CV text only, ready to use.`;
 
@@ -144,7 +145,7 @@ OUTPUT FORMAT: Pure CV text only, ready to use.`;
             }],
             generationConfig: {
                 temperature: 0.7,
-                maxOutputTokens: 2048,
+                maxOutputTokens: 4096,
             }
         })
     });
@@ -159,17 +160,27 @@ OUTPUT FORMAT: Pure CV text only, ready to use.`;
     // Log response for debugging
     console.log('Gemini API Response:', JSON.stringify(data, null, 2));
 
-    // Handle different response formats
+    let tailoredCV = null;
+
+    // Method 1: Standard structure
     if (data.candidates && data.candidates[0]) {
         if (data.candidates[0].content && data.candidates[0].content.parts) {
-            return data.candidates[0].content.parts[0].text;
+            tailoredCV = data.candidates[0].content.parts[0].text;
         } else if (data.candidates[0].text) {
-            return data.candidates[0].text;
+            tailoredCV = data.candidates[0].text;
         }
     }
 
-    // If we get here, the response format is unexpected
-    throw new Error('Unexpected response format from Gemini API. Check server logs.');
+    // Method 2: Direct text field
+    if (!tailoredCV && data.text) {
+        tailoredCV = data.text;
+    }
+
+    if (!tailoredCV) {
+        throw new Error('Unexpected response format from Gemini API. Check server logs.');
+    }
+
+    return tailoredCV;
 }
 
 // OpenAI API call
