@@ -66,6 +66,7 @@ CRITICAL INSTRUCTIONS:
 6. Make it ATS-friendly
 7. Maintain truthfulness - don't add fake experience
 8. Format should be ready for immediate copy-paste or download
+9. The CV should be 1 page long and maintaing a proper flow and structure.
 
 OUTPUT FORMAT: Pure CV text only, ready to use.`;
 
