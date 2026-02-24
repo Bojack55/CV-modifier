@@ -15,7 +15,7 @@ const keywordsList = document.getElementById('keywordsList');
 const toast = document.getElementById('toast');
 
 // API Configuration
-const API_BASE_URL = '/.netlify/functions';  // Point to Netlify functions
+const API_BASE_URL = '/api';  // Point to Express server
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
